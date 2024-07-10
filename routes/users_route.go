@@ -7,5 +7,6 @@ import (
 )
 
 func UserRouters(e *echo.Echo, handler handlers.UserHandler) {
-	e.GET("/user/login", handler.Login)
+	e.POST("/user/register", handler.Register)
+	e.POST("/user/login", handler.Login)
 }

@@ -1,9 +1,9 @@
 CREATE table users (
-  user_id varchar(10) not null PRIMARY key,
+  user_id varchar(40) not null PRIMARY key,
   avatar text,
   full_name text,
   birthday DATE,
-  email text,
+  email varchar(50) UNIQUE,
   password text,
   phone text,
   address text,
@@ -12,7 +12,7 @@ CREATE table users (
 );
 
 CREATE TABLE boards (
-  board_id varchar(10) not null PRIMARY key,
+  board_id varchar(40) not null PRIMARY key,
   title text,
   description text,
   type text,
@@ -21,8 +21,8 @@ CREATE TABLE boards (
 );
 
 CREATE table board_users (
-  board_id varchar(10) not null,
-  user_id varchar(10) not null,
+  board_id varchar(40) not null,
+  user_id varchar(40) not null,
   role  varchar(20) DEFAULT "member",
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP on UPDATE CURRENT_TIMESTAMP,
@@ -31,8 +31,8 @@ CREATE table board_users (
   FOREIGN key (user_id) REFERENCES users(user_id)
 );
 CREATE TABLE columns (
-  board_id varchar(10) not null,
-  column_id varchar(10) not null,
+  board_id varchar(40) not null,
+  column_id varchar(40) not null,
   column_order int,
   title text,
   PRIMARY KEY (board_id, column_id),
@@ -41,9 +41,9 @@ CREATE TABLE columns (
   FOREIGN key (board_id) REFERENCES boards(board_id)
 );
 CREATE TABLE cards (
-  board_id varchar(10) not null,
-  column_id varchar(10) not null,
-  card_id varchar(10) not null,
+  board_id varchar(40) not null,
+  column_id varchar(40) not null,
+  card_id varchar(40) not null,
   card_order int,
   title text,
   description text,
@@ -56,10 +56,10 @@ CREATE TABLE cards (
 );
 
 create table card_members (
-  board_id varchar(10) not null,
-  column_id varchar(10) not null,
-  card_id varchar(10) not null,
-  user_id varchar(10) not null,
+  board_id varchar(40) not null,
+  column_id varchar(40) not null,
+  card_id varchar(40) not null,
+  user_id varchar(40) not null,
   PRIMARY KEY (board_id, column_id, card_id, user_id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP on UPDATE CURRENT_TIMESTAMP,
@@ -68,10 +68,10 @@ create table card_members (
 );
 
 create table card_comments (
-  board_id varchar(10) not null,
-  column_id varchar(10) not null,
-  card_id varchar(10) not null,
-  user_id varchar(10) not null,
+  board_id varchar(40) not null,
+  column_id varchar(40) not null,
+  card_id varchar(40) not null,
+  user_id varchar(40) not null,
   content text,
   image text,
   PRIMARY KEY (board_id, column_id, card_id, user_id),
@@ -82,10 +82,10 @@ create table card_comments (
 );
 
 create table card_attachments (
-  board_id varchar(10) not null,
-  column_id varchar(10) not null,
-  card_id varchar(10) not null,
-  user_id varchar(10) not null,
+  board_id varchar(40) not null,
+  column_id varchar(40) not null,
+  card_id varchar(40) not null,
+  user_id varchar(40) not null,
   url_file text,
   PRIMARY KEY (board_id, column_id, card_id, user_id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
