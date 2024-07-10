@@ -21,3 +21,7 @@ type ReqRegister struct {
 	Email    string `json:"email" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
+type ReqLogin struct {
+	Email    string `json:"email" validate:"required" db:"email"`
+	Password string `json:"password" validate:"required" db:"password"`
+}

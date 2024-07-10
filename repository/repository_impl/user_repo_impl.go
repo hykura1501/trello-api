@@ -21,10 +21,11 @@ func NewUserRepository(sql *database.SQL) repository.UserRepository {
 		sql: sql,
 	}
 }
+
 func (repo UserRepositoryImpl) SaveUser(context context.Context, user models.User) (models.User, error) {
 	statement := `
-		INSERT INTO users(user_id, full_name, email, password)
-		VALUES (:user_id, :full_name, :email, :password)
+		INSERT INTO users(user_id, full_name, email, password, avatar, birthday, phone, address, created_at, updated_at)
+		VALUES (:user_id, :full_name, :email, :password, :avatar, :birthday, :phone, :address, :created_at, :updated_at)
 	`
 	if _, err := repo.sql.Db.NamedExecContext(context, statement, user); err != nil {
 		if err, _ := err.(*mysql.MySQLError); err.Number == 1062 {
@@ -34,6 +35,18 @@ func (repo UserRepositoryImpl) SaveUser(context context.Context, user models.Use
 			log.Println(err.Message)
 			return user, errors.New(err.Message)
 		}
+	}
+	return user, nil
+}
+
+func (repo UserRepositoryImpl) CheckUser(context context.Context, reqLogin models.ReqLogin) (models.User, error) {
+	var user models.User
+	statement := `
+		SELECT * FROM users WHERE email=?
+	`
+	if err := repo.sql.Db.GetContext(context, &user, statement, reqLogin.Email); err != nil {
+		log.Println(err.Error())
+		return user, err
 	}
 	return user, nil
 }
