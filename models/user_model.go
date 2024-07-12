@@ -13,7 +13,7 @@ type User struct {
 	Address   string    `json:"address,omitempty" db:"address,omitempty"`
 	CreatedAt time.Time `json:"-" db:"created_at,omitempty"`
 	UpdatedAt time.Time `json:"-" db:"updated_at,omitempty"`
-	Token     string    `json:"token,omitempty" db:"-"`
+	// Token     string    `json:"token,omitempty" db:"-"`
 }
 
 type ReqRegister struct {

@@ -9,6 +9,7 @@ import (
 	"trello-api/security"
 
 	validator "github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -17,6 +18,7 @@ type UserHandler struct {
 	UserRepo repository.UserRepository
 }
 
+// [POST] /user/register
 func (repo UserHandler) Register(c echo.Context) error {
 	var reqRegister models.ReqRegister
 	if err := c.Bind(&reqRegister); err != nil {
@@ -51,14 +53,15 @@ func (repo UserHandler) Register(c echo.Context) error {
 		})
 	}
 	//Return Token
-	token, err := security.GenerateToken(user)
+	token, expiresAt, err := security.GenerateToken(user)
 	if err != nil {
 		return c.JSON(http.StatusRequestTimeout, models.Response{
 			Code:    http.StatusRequestTimeout,
 			Message: err.Error(),
 		})
 	}
-	user.Token = token
+	security.WriteCookie(c, "token", token, expiresAt)
+
 	return c.JSON(http.StatusOK, models.Response{
 		Code:    http.StatusOK,
 		Data:    user,
@@ -66,6 +69,7 @@ func (repo UserHandler) Register(c echo.Context) error {
 	})
 }
 
+// [POST] /user/login
 func (repo UserHandler) Login(c echo.Context) error {
 	var reqLogin models.ReqLogin
 	if err := c.Bind(&reqLogin); err != nil {
@@ -99,18 +103,40 @@ func (repo UserHandler) Login(c echo.Context) error {
 		})
 	}
 
-	//Return Token
-	token, err := security.GenerateToken(user)
+	//Token
+	token, expiresAt, err := security.GenerateToken(user)
+
 	if err != nil {
 		return c.JSON(http.StatusRequestTimeout, models.Response{
 			Code:    http.StatusRequestTimeout,
 			Message: err.Error(),
 		})
 	}
-	user.Token = token
+
+	security.WriteCookie(c, "token", token, expiresAt)
+
 	return c.JSON(http.StatusOK, models.Response{
 		Code:    http.StatusOK,
 		Data:    user,
 		Message: "logged in successfully",
+	})
+}
+
+// [GET] /user/profile
+func (repo UserHandler) Profile(c echo.Context) error {
+	tokenData := c.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*models.JWTCustomsClaims)
+	userId := claims.UserId
+	user, err := repo.UserRepo.GetUser(c.Request().Context(), userId)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, models.Response{
+			Code:    http.StatusNotFound,
+			Message: "Not Found",
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Data:    user,
+		Message: "request successfully",
 	})
 }

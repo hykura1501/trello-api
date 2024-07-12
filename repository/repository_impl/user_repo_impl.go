@@ -50,3 +50,15 @@ func (repo UserRepositoryImpl) CheckUser(context context.Context, reqLogin model
 	}
 	return user, nil
 }
+
+func (repo UserRepositoryImpl) GetUser(context context.Context, userId string) (models.User, error) {
+	var user models.User
+	statement := `
+		SELECT * FROM users WHERE user_id=?
+	`
+	if err := repo.sql.Db.GetContext(context, &user, statement, userId); err != nil {
+		log.Println(err.Error())
+		return user, err
+	}
+	return user, nil
+}
