@@ -16,6 +16,7 @@ type BoardHandler struct {
 	BoardRepo repository.BoardRepository
 }
 
+// [GET] /board/new
 func (repo BoardHandler) NewBoard(c echo.Context) error {
 	var board models.Board
 	if err := c.Bind(&board); err != nil {
@@ -45,6 +46,23 @@ func (repo BoardHandler) NewBoard(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.Response{
 		Code:    http.StatusOK,
 		Message: "board created",
+		Data:    board,
+	})
+}
+
+// [GET] /board/detail/:board_id
+func (repo BoardHandler) BoardDetail(c echo.Context) error {
+	boardId := c.Param("board_id")
+	board, err := repo.BoardRepo.GetBoard(boardId)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, models.Response{
+			Code:    http.StatusNotFound,
+			Message: "not found board_id",
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "",
 		Data:    board,
 	})
 }
