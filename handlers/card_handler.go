@@ -12,13 +12,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type ColumnHandler struct {
-	ColumnRepo repository.ColumnRepository
+type CardHandler struct {
+	CardRepo repository.CardRepository
 }
 
-func (repo ColumnHandler) NewColumn(c echo.Context) error {
-	var column models.Column
-	if err := c.Bind(&column); err != nil {
+// [POST] /card/new
+func (repo CardHandler) NewCard(c echo.Context) error {
+	var card models.Card
+	if err := c.Bind(&card); err != nil {
 		log.Println(err.Error())
 		return c.JSON(http.StatusBadRequest, models.Response{
 			Code:    http.StatusBadRequest,
@@ -26,17 +27,17 @@ func (repo ColumnHandler) NewColumn(c echo.Context) error {
 		})
 	}
 	validate := validator.New()
-	if err := validate.Struct(column); err != nil {
+	if err := validate.Struct(card); err != nil {
 		return c.JSON(http.StatusNotAcceptable, models.Response{
 			Code:    http.StatusNotAcceptable,
 			Message: err.Error(),
 		})
 	}
 	// insert to db
-	column.ColumnId = uuid.New().String()
-	column.CreatedAt = time.Now()
-	column.UpdatedAt = time.Now()
-	if err := repo.ColumnRepo.SaveColumn(column); err != nil {
+	card.CardId = uuid.New().String()
+	card.CreatedAt = time.Now()
+	card.UpdatedAt = time.Now()
+	if err := repo.CardRepo.SaveCard(card); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response{
 			Code:    http.StatusBadRequest,
 			Message: err.Error(),
@@ -44,15 +45,32 @@ func (repo ColumnHandler) NewColumn(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, models.Response{
 		Code:    http.StatusOK,
-		Message: "column created",
-		Data:    column,
+		Message: "card created",
+		Data:    card,
 	})
 }
 
-// [GET] /column/detail/:column_id
-func (repo ColumnHandler) ColumnDetail(c echo.Context) error {
+// [GET] /card/detail/:card_id
+func (repo CardHandler) CardDetail(c echo.Context) error {
+	cardId := c.Param("card_id")
+	card, err := repo.CardRepo.GetCard(cardId)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, models.Response{
+			Code:    http.StatusNotFound,
+			Message: "not found card_id",
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "",
+		Data:    card,
+	})
+}
+
+// [GET] /card/:column_id
+func (repo CardHandler) GetAllCards(c echo.Context) error {
 	columnId := c.Param("column_id")
-	column, err := repo.ColumnRepo.GetColumn(columnId)
+	cards, err := repo.CardRepo.GetAllCardsOfColumn(columnId)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, models.Response{
 			Code:    http.StatusNotFound,
@@ -62,23 +80,6 @@ func (repo ColumnHandler) ColumnDetail(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.Response{
 		Code:    http.StatusOK,
 		Message: "",
-		Data:    column,
-	})
-}
-
-// [GET] /column/:board_id
-func (repo ColumnHandler) GetAllColumns(c echo.Context) error {
-	boardId := c.Param("board_id")
-	columns, err := repo.ColumnRepo.GetAllColumnsOfBoard(boardId)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, models.Response{
-			Code:    http.StatusNotFound,
-			Message: "not found board_id",
-		})
-	}
-	return c.JSON(http.StatusOK, models.Response{
-		Code:    http.StatusOK,
-		Message: "",
-		Data:    columns,
+		Data:    cards,
 	})
 }

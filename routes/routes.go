@@ -11,10 +11,12 @@ type API struct {
 	UserHandler   handlers.UserHandler
 	BoardHandler  handlers.BoardHandler
 	ColumnHandler handlers.ColumnHandler
+	CardHandler   handlers.CardHandler
 }
 
 func (api *API) SetupRouter() {
 	UserRouters(api.Echo, api.UserHandler)
 	BoardRouters(api.Echo, api.BoardHandler)
 	ColumnRouters(api.Echo, api.ColumnHandler)
+	CardRouters(api.Echo, api.CardHandler)
 }

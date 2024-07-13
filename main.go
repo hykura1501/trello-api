@@ -45,6 +45,9 @@ func main() {
 	columnHandler := handlers.ColumnHandler{
 		ColumnRepo: repositoryImpl.NewColumnRepository(sql),
 	}
+	cardHandler := handlers.CardHandler{
+		CardRepo: repositoryImpl.NewCardRepository(sql),
+	}
 	//End Handler
 	// Setup Router
 	api := routes.API{
@@ -52,6 +55,7 @@ func main() {
 		UserHandler:   userHandler,
 		BoardHandler:  boardHandler,
 		ColumnHandler: columnHandler,
+		CardHandler:   cardHandler,
 	}
 	api.SetupRouter()
 	// Setup Router
