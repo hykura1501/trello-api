@@ -83,3 +83,25 @@ func (repo CardHandler) GetAllCards(c echo.Context) error {
 		Data:    cards,
 	})
 }
+
+// [PATCH] /card/update
+func (repo CardHandler) UpdateCard(c echo.Context) error {
+	var card models.Card
+	if err := c.Bind(&card); err != nil {
+		return c.JSON(http.StatusNotFound, models.Response{
+			Code:    http.StatusNotFound,
+			Message: "can't mapping card",
+		})
+	}
+	if err := repo.CardRepo.UpdateCard(card); err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response{
+			Code:    http.StatusBadRequest,
+			Message: "failed to update",
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "",
+		Data:    card,
+	})
+}

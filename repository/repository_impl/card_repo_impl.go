@@ -56,3 +56,15 @@ func (repo CardRepositoryImpl) GetAllCardsOfColumn(columnId string) ([]models.Ca
 	}
 	return card, nil
 }
+
+func (repo CardRepositoryImpl) UpdateCard(cards models.Card) error {
+	//update title
+	statement :=
+		`	
+		UPDATE cards SET title=:title WHERE board_id=:board_id and column_id=:column_id and card_id=:card_id
+	`
+	if _, err := repo.sql.Db.NamedExec(statement, cards); err != nil {
+		return err
+	}
+	return nil
+}

@@ -82,3 +82,25 @@ func (repo ColumnHandler) GetAllColumns(c echo.Context) error {
 		Data:    columns,
 	})
 }
+
+// [PATCH] /column/update
+func (repo ColumnHandler) UpdateColumn(c echo.Context) error {
+	var column models.Column
+	if err := c.Bind(&column); err != nil {
+		return c.JSON(http.StatusNotFound, models.Response{
+			Code:    http.StatusNotFound,
+			Message: "can't mapping column",
+		})
+	}
+	if err := repo.ColumnRepo.UpdateColumn(column); err != nil {
+		return c.JSON(http.StatusBadRequest, models.Response{
+			Code:    http.StatusBadRequest,
+			Message: "failed to update",
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "",
+		Data:    column,
+	})
+}

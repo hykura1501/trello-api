@@ -56,3 +56,15 @@ func (repo ColumnRepositoryImpl) GetAllColumnsOfBoard(boardId string) ([]models.
 	}
 	return columns, nil
 }
+
+func (repo ColumnRepositoryImpl) UpdateColumn(column models.Column) error {
+	//update title
+	statement :=
+		`	
+		UPDATE columns SET title=:title WHERE board_id=:board_id and column_id=:column_id
+	`
+	if _, err := repo.sql.Db.NamedExec(statement, column); err != nil {
+		return err
+	}
+	return nil
+}

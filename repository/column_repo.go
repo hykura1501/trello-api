@@ -6,4 +6,5 @@ type ColumnRepository interface {
 	SaveColumn(column *models.Column) error
 	GetColumn(columnId string) (models.Column, error)
 	GetAllColumnsOfBoard(boardId string) ([]models.Column, error)
+	UpdateColumn(column models.Column) error
 }
