@@ -17,7 +17,7 @@ func NewCardRepository(sql *database.SQL) repository.CardRepository {
 	}
 }
 
-func (repo CardRepositoryImpl) SaveCard(card models.Card) error {
+func (repo CardRepositoryImpl) SaveCard(card *models.Card) error {
 	maxOrder, err := database.GetMaxOrder(repo.sql, "cards", "column_id", card.ColumnId)
 	if err != nil {
 		log.Println(err.Error())

@@ -37,7 +37,7 @@ func (repo CardHandler) NewCard(c echo.Context) error {
 	card.CardId = uuid.New().String()
 	card.CreatedAt = time.Now()
 	card.UpdatedAt = time.Now()
-	if err := repo.CardRepo.SaveCard(card); err != nil {
+	if err := repo.CardRepo.SaveCard(&card); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response{
 			Code:    http.StatusBadRequest,
 			Message: err.Error(),

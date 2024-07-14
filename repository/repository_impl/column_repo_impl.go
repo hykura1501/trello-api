@@ -17,7 +17,7 @@ func NewColumnRepository(sql *database.SQL) repository.ColumnRepository {
 	}
 }
 
-func (repo ColumnRepositoryImpl) SaveColumn(column models.Column) error {
+func (repo ColumnRepositoryImpl) SaveColumn(column *models.Column) error {
 	maxOrder, err := database.GetMaxOrder(repo.sql, "columns", "board_id", column.BoardId)
 	if err != nil {
 		log.Println(err.Error())

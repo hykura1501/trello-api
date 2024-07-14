@@ -36,7 +36,7 @@ func (repo ColumnHandler) NewColumn(c echo.Context) error {
 	column.ColumnId = uuid.New().String()
 	column.CreatedAt = time.Now()
 	column.UpdatedAt = time.Now()
-	if err := repo.ColumnRepo.SaveColumn(column); err != nil {
+	if err := repo.ColumnRepo.SaveColumn(&column); err != nil {
 		return c.JSON(http.StatusBadRequest, models.Response{
 			Code:    http.StatusBadRequest,
 			Message: err.Error(),
