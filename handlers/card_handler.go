@@ -6,6 +6,7 @@ import (
 	"time"
 	"trello-api/models"
 	"trello-api/repository"
+	"trello-api/utils"
 
 	validator "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
@@ -103,5 +104,35 @@ func (repo CardHandler) UpdateCard(c echo.Context) error {
 		Code:    http.StatusOK,
 		Message: "",
 		Data:    card,
+	})
+}
+
+// [POST] /card/attachment/new
+func (repo CardHandler) NewAttachment(c echo.Context) error {
+	formHeader, err := c.FormFile("file")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	formFile, err := formHeader.Open()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	uploadUrl, err := utils.ImageUploadHelper(formFile)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    uploadUrl,
 	})
 }

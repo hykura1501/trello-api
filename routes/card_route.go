@@ -11,4 +11,5 @@ func CardRouters(c *echo.Echo, handler handlers.CardHandler) {
 	c.GET("/card/detail/:card_id", handler.CardDetail)
 	c.GET("/card/:column_id", handler.GetAllCards)
 	c.PATCH("/card/update", handler.UpdateCard)
+	c.POST("/card/attachment/new", handler.NewAttachment)
 }

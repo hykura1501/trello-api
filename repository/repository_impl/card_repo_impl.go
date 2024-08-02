@@ -61,9 +61,13 @@ func (repo CardRepositoryImpl) UpdateCard(cards models.Card) error {
 	//update title
 	statement :=
 		`	
-		UPDATE cards SET title=:title WHERE board_id=:board_id and column_id=:column_id and card_id=:card_id
+		UPDATE cards SET 
+			title= CASE WHEN length(:title)=0 THEN title ELSE :title END,
+			description= CASE WHEN length(:description)=0 THEN description ELSE :description END
+		WHERE board_id=:board_id and column_id=:column_id and card_id=:card_id
 	`
 	if _, err := repo.sql.Db.NamedExec(statement, cards); err != nil {
+		log.Fatal(err)
 		return err
 	}
 	return nil
