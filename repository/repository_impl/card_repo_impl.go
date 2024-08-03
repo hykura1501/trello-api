@@ -80,3 +80,14 @@ func (repo CardRepositoryImpl) SaveAttachment(attachment models.FileAttachment) 
 	}
 	return nil
 }
+
+func (repo CardRepositoryImpl) GetAllAttachments(card models.Card) ([]models.FileAttachment, error) {
+	statement := `
+		SELECT * FROM card_attachments WHERE card_id=? AND column_id=? and board_id=? ORDER BY created_at DESC
+	`
+	var attachments []models.FileAttachment
+	if err := repo.sql.Db.Select(&attachments, statement, card.CardId, card.ColumnId, card.BoardId); err != nil {
+		return attachments, err
+	}
+	return attachments, nil
+}

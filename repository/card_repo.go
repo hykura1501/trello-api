@@ -8,4 +8,5 @@ type CardRepository interface {
 	GetAllCardsOfColumn(columnId string) ([]models.Card, error)
 	UpdateCard(cards models.Card) error
 	SaveAttachment(attachment models.FileAttachment) error
+	GetAllAttachments(card models.Card) ([]models.FileAttachment, error)
 }

@@ -156,3 +156,26 @@ func (repo CardHandler) NewAttachment(c echo.Context) error {
 		Data:    reqAttachment,
 	})
 }
+
+// [GET] /card/attachment
+func (repo CardHandler) GetAllAttachments(c echo.Context) error {
+	var card models.Card
+	if err := c.Bind(&card); err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	attachments, err := repo.CardRepo.GetAllAttachments(card)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    attachments,
+	})
+}
