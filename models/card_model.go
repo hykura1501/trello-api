@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Card struct {
 	BoardId     string    `json:"boardId,omitempty" db:"board_id,omitempty" validate:"required"`
@@ -12,4 +14,14 @@ type Card struct {
 	Thumbnail   string    `json:"thumbnail,omitempty" db:"thumbnail,omitempty" `
 	CreatedAt   time.Time `json:"-" db:"created_at,omitempty"`
 	UpdatedAt   time.Time `json:"-" db:"updated_at,omitempty"`
+}
+
+type FileAttachment struct {
+	FileUrl   string    `db:"url_file"`
+	BoardId   string    `db:"board_id"`
+	ColumnId  string    `db:"column_id"`
+	UserId    string    `db:"user_id"`
+	CardId    string    `db:"card_id"`
+	CreatedAt time.Time `json:"-" db:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"-" db:"updated_at,omitempty"`
 }

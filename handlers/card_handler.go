@@ -110,6 +110,9 @@ func (repo CardHandler) UpdateCard(c echo.Context) error {
 // [POST] /card/attachment/new
 func (repo CardHandler) NewAttachment(c echo.Context) error {
 	formHeader, err := c.FormFile("file")
+	boardId := c.FormValue("boardId")
+	columnId := c.FormValue("columnId")
+	cardId := c.FormValue("cardId")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, models.Response{
 			Code:    http.StatusInternalServerError,
@@ -130,9 +133,26 @@ func (repo CardHandler) NewAttachment(c echo.Context) error {
 			Message: err.Error(),
 		})
 	}
+	//handle after uploadFile
+	reqAttachment := models.FileAttachment{
+		BoardId:   boardId,
+		ColumnId:  columnId,
+		CardId:    cardId,
+		UserId:    "723b8ef5-09a8-4265-bfb9-810c1d83611f",
+		FileUrl:   uploadUrl,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	if err := repo.CardRepo.SaveAttachment(reqAttachment); err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
 	return c.JSON(http.StatusOK, models.Response{
 		Code:    http.StatusOK,
 		Message: "success",
-		Data:    uploadUrl,
+		Data:    reqAttachment,
 	})
 }
