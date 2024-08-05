@@ -139,6 +139,7 @@ func (repo CardHandler) NewAttachment(c echo.Context) error {
 		ColumnId:  columnId,
 		CardId:    cardId,
 		UserId:    "723b8ef5-09a8-4265-bfb9-810c1d83611f",
+		FileName:  formHeader.Filename,
 		FileUrl:   uploadUrl,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),

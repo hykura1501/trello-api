@@ -17,9 +17,10 @@ type Card struct {
 }
 
 type FileAttachment struct {
-	FileUrl   string    `db:"url_file" json:"fileUrl"`
+	FileUrl   string    `db:"file_url" json:"fileUrl"`
 	BoardId   string    `db:"board_id" json:"boardId"`
 	ColumnId  string    `db:"column_id" json:"columnId"`
+	FileName  string    `db:"file_name" json:"fileName"`
 	UserId    string    `db:"user_id" json:"userId"`
 	CardId    string    `db:"card_id" json:"cardId"`
 	CreatedAt time.Time `json:"-" db:"created_at,omitempty"`

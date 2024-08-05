@@ -73,7 +73,7 @@ func (repo CardRepositoryImpl) UpdateCard(cards models.Card) error {
 	return nil
 }
 func (repo CardRepositoryImpl) SaveAttachment(attachment models.FileAttachment) error {
-	statement := "INSERT INTO card_attachments(board_id, column_id, card_id, user_id, url_file, created_at, updated_at) VALUES (:board_id, :column_id, :card_id, :user_id, :url_file, :created_at, :updated_at)"
+	statement := "INSERT INTO card_attachments(board_id, column_id, card_id, user_id, file_url, file_name, created_at, updated_at) VALUES (:board_id, :column_id, :card_id, :user_id, :file_url, :file_name, :created_at, :updated_at)"
 	if _, err := repo.sql.Db.NamedExec(statement, attachment); err != nil {
 		log.Println(err.Error())
 		return err
