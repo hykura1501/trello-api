@@ -9,4 +9,5 @@ type CardRepository interface {
 	UpdateCard(cards models.Card) error
 	SaveAttachment(attachment models.FileAttachment) error
 	GetAllAttachments(card models.Card) ([]models.FileAttachment, error)
+	DeleteAttachment(attachment models.FileAttachment) error
 }

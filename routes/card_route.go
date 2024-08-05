@@ -13,4 +13,5 @@ func CardRouters(c *echo.Echo, handler handlers.CardHandler) {
 	c.PATCH("/card/update", handler.UpdateCard)
 	c.POST("/card/attachment/new", handler.NewAttachment)
 	c.POST("/card/attachment", handler.GetAllAttachments)
+	c.DELETE("/card/attachment/delete", handler.DeleteAttachment)
 }

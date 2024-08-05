@@ -158,7 +158,7 @@ func (repo CardHandler) NewAttachment(c echo.Context) error {
 	})
 }
 
-// [GET] /card/attachment
+// [POST] /card/attachment
 func (repo CardHandler) GetAllAttachments(c echo.Context) error {
 	var card models.Card
 	if err := c.Bind(&card); err != nil {
@@ -178,5 +178,26 @@ func (repo CardHandler) GetAllAttachments(c echo.Context) error {
 		Code:    http.StatusOK,
 		Message: "success",
 		Data:    attachments,
+	})
+}
+
+// [DELETE] /card/attachment/delete
+func (repo CardHandler) DeleteAttachment(c echo.Context) error {
+	var attachment models.FileAttachment
+	if err := c.Bind(&attachment); err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	if err := repo.CardRepo.DeleteAttachment(attachment); err != nil {
+		return c.JSON(http.StatusInternalServerError, models.Response{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, models.Response{
+		Code:    http.StatusOK,
+		Message: "success",
 	})
 }

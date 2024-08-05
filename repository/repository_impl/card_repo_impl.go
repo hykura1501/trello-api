@@ -1,6 +1,7 @@
 package repositoryImpl
 
 import (
+	"fmt"
 	"log"
 	"trello-api/database"
 	"trello-api/models"
@@ -87,7 +88,19 @@ func (repo CardRepositoryImpl) GetAllAttachments(card models.Card) ([]models.Fil
 	`
 	var attachments []models.FileAttachment
 	if err := repo.sql.Db.Select(&attachments, statement, card.CardId, card.ColumnId, card.BoardId); err != nil {
+		fmt.Println(err.Error())
 		return attachments, err
 	}
 	return attachments, nil
+}
+
+func (repo CardRepositoryImpl) DeleteAttachment(attachment models.FileAttachment) error {
+	statement := `
+		DELETE FROM card_attachments WHERE file_url=:file_url
+	`
+	if _, err := repo.sql.Db.NamedExec(statement, attachment); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	return nil
 }
