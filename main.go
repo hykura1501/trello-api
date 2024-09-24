@@ -41,6 +41,7 @@ func main() {
 	}
 	boardHandler := handlers.BoardHandler{
 		BoardRepo: repositoryImpl.NewBoardRepository(sql),
+		UserRepo:  repositoryImpl.NewUserRepository(sql),
 	}
 	columnHandler := handlers.ColumnHandler{
 		ColumnRepo: repositoryImpl.NewColumnRepository(sql),
